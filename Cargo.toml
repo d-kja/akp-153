@@ -1,0 +1,15 @@
+[package]
+name = "akp-deck"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hidapi = "2.6.1"
+elgato-streamdeck = { path = "./pkg/deck" }
+image = { version = "0.25.2", default-features = false, features = [
+  "bmp",
+  "jpeg",
+] }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3"
