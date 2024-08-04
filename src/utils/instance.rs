@@ -12,7 +12,7 @@ pub struct Instance {
 #[derive(Debug)]
 pub enum InstanceError {
     CreationError(String),
-    UnableToConnect,
+    UnableToConnect(String),
     PathNotFound,
     Generic(String),
 }
@@ -22,7 +22,7 @@ impl Display for InstanceError {
         use InstanceError::*;
         match self {
             CreationError(msg) => write!(f, "Unable to create instance, reason {}", msg),
-            UnableToConnect => write!(f, "Unable to connect to the device"),
+            UnableToConnect(msg) => write!(f, "Unable to connect to the device {}", msg),
             PathNotFound => write!(f, "The path provided wasn't found"),
             Generic(msg) => write!(f, "{msg}"),
         }
@@ -56,8 +56,8 @@ impl Instance {
 
                 let device = StreamDeck::connect(&hid, kind, &serial);
 
-                if device.is_err() {
-                    return Err(InstanceError::UnableToConnect);
+                if let Err(msg) = device {
+                    return Err(InstanceError::UnableToConnect(msg.to_string()));
                 }
 
                 let device = device.unwrap();
